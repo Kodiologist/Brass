@@ -15,7 +15,7 @@ create table Subjects
 
 create table Activities
    (sn                integer       not null
-      references Subjects(sn),
+        references Subjects(sn),
     actn              integer       not null,
     activityname      text          not null,
     primary key (sn, actn));
@@ -30,7 +30,18 @@ create table ActivityDurations
 
 create table WakeupTimes
    (sn                integer       not null
-      references Subjects(sn),
+        references Subjects(sn),
     d8                integer       not null,
     submitted_t       integer,
+    primary key (sn, d8));
+
+create table Notifications
+   (sn                integer       not null
+        references Subjects(sn),
+    d8                integer       not null,
+    notification_type integer       not null
+        check (notification_type in (
+            1,    -- Welcome message
+            2,    -- First warning for a miss
+            3)),  -- Kickout message for a second miss
     primary key (sn, d8));
