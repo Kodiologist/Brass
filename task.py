@@ -110,7 +110,6 @@ export_json = json.dumps(dict(
 print(urllib2.urlopen(par['receiver_url'], data = urllib.urlencode(dict(
     hmac = hmac.new(par['hmac_key'], export_json).hexdigest(),
     json = export_json))).read())
-exit()
 
 # ------------------------------------------------------------
 # Done!
