@@ -3,6 +3,7 @@
 
 from sys import argv
 from datetime import date
+from time import time
 import urllib, urllib2
 import hmac, json
 import wx
@@ -61,6 +62,7 @@ def server_send(subject, email, activity_names):
     'Send email addresses and activites to the server.'
 
     export_json = json.dumps(dict(
+        time = int(time()),
         subject = subject,
         email = email,
         first_d8 = d8(commitments.dateplus(date.today(), 1)),
