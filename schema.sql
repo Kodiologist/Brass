@@ -1,7 +1,7 @@
 create table Subjects
    (sn                              integer primary key,
     subject_id        text          not null unique,
-    email             text          not null,
+    email             text,
     active            integer       not null
         check (active in (0, 1))
         default 1,
