@@ -57,11 +57,31 @@ def stringInputDialog(prompt):
     d.Destroy()
     return d.input.GetValue()
 
+def server_send(subject, email, activity_names):
+    'Send email addresses and activites to the server.'
+
+    export_json = json.dumps(dict(
+        subject = subject,
+        email = email,
+        first_d8 = d8(commitments.dateplus(date.today(), 1)),
+        last_d8 = d8(commitments.dateplus(date.today(), commitments.checkin_range)),
+        activities = activity_names))
+
+    f = urllib2.urlopen(par['receiver_url'], data = urllib.urlencode(dict(
+        hmac = hmac.new(par['hmac_key'], export_json).hexdigest(),
+        json = export_json)))
+    if par['debug']: print f.read()
+    f.close()
+
 # ------------------------------------------------------------
 # Preliminaries
 # ------------------------------------------------------------
 
 # TODO: Check for a network connection first
+
+if par['debug_serverside']:
+    server_send('test1', par['debug_email'], ['Studying', 'Jogging', 'Eating'])
+    exit()
 
 init_wx()
 
@@ -97,23 +117,11 @@ with o.timestamps('commitments'):
     o.save('commitments', commitments.get())
 
 # ------------------------------------------------------------
-# Send email addresses and activites to the server
-# ------------------------------------------------------------
-
-export_json = json.dumps(dict(
-    subject = o.data['subject'],
-    email = o.data['email'],
-    first_d8 = d8(commitments.dateplus(date.today(), 1)),
-    last_d8 = d8(commitments.dateplus(date.today(), commitments.checkin_range)),
-    activities = [d['name'] for d in o.data['commitments']['activities']]))
-
-print(urllib2.urlopen(par['receiver_url'], data = urllib.urlencode(dict(
-    hmac = hmac.new(par['hmac_key'], export_json).hexdigest(),
-    json = export_json))).read())
-
-# ------------------------------------------------------------
 # Done!
 # ------------------------------------------------------------
+
+server_send(data['subject'], data['email'],
+    [d['name'] for d in data['commitments']['activities']])
 
 o.done(par['output_path_fmt'].format(**o.data))
 
