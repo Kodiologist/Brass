@@ -9,7 +9,7 @@ import hmac, json
 import wx
 from wxPython.lib.dialogs import messageDialog
 import schizoidpy
-from schizoidpy import init_wx, box, wrapped_text
+from schizoidpy import init_wx, box, okay, wrapped_text
 import commitments
 
 par = dict(zip(argv[1::2], argv[2::2])) # DEPLOYMENT SCRIPT EDITS THIS LINE
@@ -48,7 +48,7 @@ class EmailDialog(wx.Dialog):
             wx.Size(0, 5),
             (self.input2, 0, wx.EXPAND),
             wx.Size(0, 10),
-            (wx.Button(self, wx.ID_OK), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
+            (okay(self, True), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
 
 def stringInputDialog(prompt):
     d = StringInputDialog(prompt)

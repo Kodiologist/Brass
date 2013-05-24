@@ -4,7 +4,7 @@ from datetime import date
 import re
 import wx
 import wx.lib.masked as masked
-from schizoidpy import box, wrapped_text, init_wx, SchizoidDlg
+from schizoidpy import box, wrapped_text, okay, init_wx, SchizoidDlg
 import operator; mcall = operator.methodcaller
 
 # ---------------------------------------------------------------
@@ -117,7 +117,7 @@ class CommitmentDialog(wx.Dialog):
 
         box(self, wx.VERTICAL,
             panel,
-            (wx.Button(self, wx.ID_OK), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
+            (okay(self), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
 
 def digest_wakeup(wakeup):
     h, m, ampm = wakeup['h'].GetStringSelection(), wakeup['m'].GetStringSelection(), wakeup['ampm'].GetStringSelection()
