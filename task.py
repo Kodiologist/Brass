@@ -2,12 +2,14 @@
 # encoding: UTF-8
 
 from sys import argv
+from random import uniform, expovariate
 from datetime import date
 from time import time
 import urllib, urllib2
 import hmac, json
 import wx
 from wxPython.lib.dialogs import messageDialog
+from psychopy.visual import Rect
 import schizoidpy
 from schizoidpy import init_wx, box, okay, wrapped_text
 import commitments
@@ -94,7 +96,7 @@ else:
 o.start_clock()
 
 # ------------------------------------------------------------
-# Main
+# Get an email address and commitments
 # ------------------------------------------------------------
 
 with o.timestamps('email'):
@@ -117,12 +119,82 @@ with o.timestamps('email'):
 with o.timestamps('commitments'):
     o.save('commitments', commitments.get())
 
+server_send(o.data['subject'], o.data['email'],
+    [d['name'] for d in o.data['commitments']['activities']])
+
+# ------------------------------------------------------------
+# Administer econometric tests
+# ------------------------------------------------------------
+
+divider_bar = Rect(o.win,
+    fillColor = 'black', lineColor = 'black',
+    width = 1.5, height = .01)
+
+dec_rate = 1 / 0.25
+inc_rate = 1 / 0.523852201187
+trials = 20
+
+def econ_test(dkey_prefix, instructions, text_top, text_bottom):
+    with o.dkey_prefix(('econ', dkey_prefix)):
+        o.instructions('instructions', instructions)
+        with o.showing(divider_bar):
+            discount = .5
+            for trial in range(trials):
+
+                o.save(('discount', trial), discount)
+                big = uniform(5, 95)
+                small = big * discount
+                big = round(big, 2)
+                small = round(small, 2)
+                if small <= .01:
+                    small = .01
+                if big <= small:
+                    big = small + .01
+                o.save(('big', trial), big)
+                o.save(('small', trial), small)
+                big = '${:.2f}'.format(big)
+                small = '${:,.2f}'.format(small)
+
+                o.wait_screen(.5)
+                choice = o.keypress_screen(('took_big', trial),
+                    dict(up = False, down = True),
+                    o.text(0, .25, text_top(big, small)),
+                    o.text(0, -.25, text_bottom(big, small)))
+
+                v = discount / (1 - discount)
+                if choice:
+                    v *= 1 + expovariate(inc_rate)
+                else:
+                    v /= 1 + expovariate(dec_rate)
+                discount = v / (v + 1)
+
+econ_test('patience',
+    'In this task, you will make a series of hypothetical choices.\n\n'
+        'Each trial will present you with a hypothetical choice between two amounts of money delivered to you at a given time in the future. Press the up arrow key if you would prefer the upper option and the down arrow key if you would prefer the lower option.\n\n'
+        'Even though these are completely hypothetical decisions, try your best to imagine what you would choose if you were really offered these choices.',
+    text_top = lambda llr, ssr: '{} today'.format(ssr),
+    text_bottom = lambda llr, ssr: '{} in one month'.format(llr))
+
+econ_test('shifted_patience',
+    'The next task is like the previous one, except the top option is delayed by one month and the bottom option is delayed by two months.',
+    text_top = lambda llr, ssr: '{} in one month'.format(ssr),
+    text_bottom = lambda llr, ssr: '{} in two months'.format(llr))
+
+econ_test('risk_aversion',
+    'In this task, you will choose between a gamble and a sure gain.\n\n'
+        'The gamble has a a 95% chance of giving you money and a 5% chance of yielding nothing. The other option has a 100% chance of yielding the indicated amount.',
+    text_top = lambda risky, sure: '{} (100% chance)'.format(sure),
+    text_bottom = lambda risky, sure: '{} (95% chance) or\nnothing (5% chance)'.format(risky))
+
+econ_test('loss_aversion',
+    'In this task, you will choose whether or not to take a gamble.\n\n'
+        'The gamble is equally likely to make you gain or lose money, but the amount to be gained and the amount to be lost may differ.',
+    text_top = lambda gain, loss: 'Nothing (100% chance)',
+    text_bottom = lambda gain, loss: 'Gain {} (50% chance) or\nlose {} (50% chance)'.format(gain, loss))
+
 # ------------------------------------------------------------
 # Done!
 # ------------------------------------------------------------
-
-server_send(o.data['subject'], o.data['email'],
-    [d['name'] for d in o.data['commitments']['activities']])
 
 o.done(par['output_path_fmt'].format(**o.data))
 
