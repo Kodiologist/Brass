@@ -15,7 +15,6 @@ import commitments
 par = dict(zip(argv[1::2], argv[2::2])) # DEPLOYMENT SCRIPT EDITS THIS LINE
 
 o = schizoidpy.Task(
-    enable_pyglet = False,
     button_radius = .12,
     okay_button_pos = (0, -.7))
 o.save('task_version', par['task_version'])
@@ -122,8 +121,8 @@ with o.timestamps('commitments'):
 # Done!
 # ------------------------------------------------------------
 
-server_send(data['subject'], data['email'],
-    [d['name'] for d in data['commitments']['activities']])
+server_send(o.data['subject'], o.data['email'],
+    [d['name'] for d in o.data['commitments']['activities']])
 
 o.done(par['output_path_fmt'].format(**o.data))
 
