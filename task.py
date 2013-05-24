@@ -80,7 +80,9 @@ def server_send(subject, email, activity_names):
 # Preliminaries
 # ------------------------------------------------------------
 
-# TODO: Check for a network connection first
+# Check for a network connection.
+if not par['debug']:
+    assert '<title>Example Domain</title>' in urllib2.urlopen('http://example.org').read()
 
 if par['debug_serverside']:
     server_send('test1', par['debug_email'], ['Studying', 'Jogging', 'Eating'])
