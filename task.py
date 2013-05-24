@@ -193,6 +193,76 @@ econ_test('loss_aversion',
     text_bottom = lambda gain, loss: 'Gain {} (50% chance) or\nlose {} (50% chance)'.format(gain, loss))
 
 # ------------------------------------------------------------
+# Administer questionnaires
+# ------------------------------------------------------------
+
+o.questionnaire_screen('cfc',
+    'How characteristic of you are each of these statements?',
+    scale_levels = ('Extremely\nuncharacteristic', 'Somewhat\nuncharacteristic', 'Uncertain', 'Somewhat\ncharacteristic', 'Extremely\ncharacteristic'),
+    questions = [
+        'I consider how things might be in the future, and try to influence those things with my day to day behavior.',
+        'Often I engage in a particular behavior in order to achieve outcomes that may not result for many years.',
+        'I only act to satisfy immediate concerns, figuring the future will take care of itself.',
+        'My behavior is only influenced by the immediate (i.e., a matter of days or weeks) outcomes of my actions.',
+        'My convenience is a big factor in the decisions I make or the actions I take.',
+        'I am willing to sacrifice my immediate happiness or well-being in order to achieve future outcomes.',
+        'I think it is important to take warnings about negative outcomes seriously even if the negative outcome will not occur for many years.',
+        'I think it is more important to perform a behavior with important distant consequences than a behavior with less-important immediate consequences.',
+        'I generally ignore warnings about possible future problems because I think the problems will be resolved before they reach crisis level.',
+        'I think that sacrificing now is usually unnecessary since future outcomes can be dealt with at a later time.',
+        'I only act to satisfy immediate concerns, figuring that I will take care of future problems that may occur at a later date.',
+        'Since my day to day work has specific outcomes, it is more important to me than behavior that has distant outcomes.'])
+
+o.questionnaire_screen('bfi',
+    u'How much would you agree that you are someone who…?',
+    scale_levels = ('Disagree\nstrongly', 'Disagree\na little', 'Neither agree\nnor disagree', 'Agree\na little', 'Agree\nstrongly'),
+    questions = [
+        'Is talkative',
+        'Tends to find fault with others',
+        'Does a thorough job',
+        'Is depressed, blue',
+        'Is original, comes up with new ideas',
+        'Is reserved',
+        'Is helpful and unselfish with others',
+        'Can be somewhat careless',
+        'Is relaxed, handles stress well',
+        'Is curious about many different things',
+        'Is full of energy',
+        'Starts quarrels with others',
+        'Is a reliable worker',
+        'Can be tense',
+        'Is ingenious, a deep thinker',
+        'Generates a lot of enthusiasm',
+        'Has a forgiving nature',
+        'Tends to be disorganized',
+        'Worries a lot',
+        'Has an active imagination',
+        'Tends to be quiet',
+        'Is generally trusting',
+        'Tends to be lazy',
+        'Is emotionally stable, not easily upset',
+        'Is inventive',
+        'Has an assertive personality',
+        'Can be cold and aloof',
+        'Perseveres until the task is finished',
+        'Can be moody',
+        'Values artistic, aesthetic experiences',
+        'Is sometimes shy, inhibited',
+        'Is considerate and kind to almost everyone',
+        'Does things efficiently',
+        'Remains calm in tense situations',
+        'Prefers work that is routine',
+        'Is outgoing, sociable',
+        'Is sometimes rude to others',
+        'Makes plans and follows through with them',
+        'Gets nervous easily',
+        'Likes to reflect, play with ideas',
+        'Has few artistic interests',
+        'Likes to cooperate with others',
+        'Is easily distracted',
+        'Is sophisticated in art, music, or literature'])
+
+# ------------------------------------------------------------
 # Done!
 # ------------------------------------------------------------
 
