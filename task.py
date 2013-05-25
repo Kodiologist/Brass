@@ -292,7 +292,7 @@ o.questionnaire_screen('bfi',
 # Done!
 # ------------------------------------------------------------
 
-o.done(par['output_path_fmt'].format(**o.data))
+o.done(par['py_output_path_fmt'].format(**o.data))
 
 o.wait_screen(1,
     o.text(0, 0, 'Done!\n\nPlease let the experimenter know you are done.'))
