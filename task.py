@@ -222,24 +222,6 @@ econ_test('loss_aversion',
 # Administer questionnaires
 # ------------------------------------------------------------
 
-o.questionnaire_screen('cfc',
-  # Strathman, A., Gleicher, F., Boninger, D. S., & Edwards, C. S. (1994). The consideration of future consequences: Weighing immediate and distant outcomes of behavior. Journal of Personality and Social Psychology, 66(4), 742–752. doi:10.1037/0022-3514.66.4.742
-    'How characteristic of you are each of these statements?',
-    scale_levels = ('Extremely\nuncharacteristic', 'Somewhat\nuncharacteristic', 'Uncertain', 'Somewhat\ncharacteristic', 'Extremely\ncharacteristic'),
-    questions = [
-        'I consider how things might be in the future, and try to influence those things with my day to day behavior.',
-        'Often I engage in a particular behavior in order to achieve outcomes that may not result for many years.',
-        'I only act to satisfy immediate concerns, figuring the future will take care of itself.',
-        'My behavior is only influenced by the immediate (i.e., a matter of days or weeks) outcomes of my actions.',
-        'My convenience is a big factor in the decisions I make or the actions I take.',
-        'I am willing to sacrifice my immediate happiness or well-being in order to achieve future outcomes.',
-        'I think it is important to take warnings about negative outcomes seriously even if the negative outcome will not occur for many years.',
-        'I think it is more important to perform a behavior with important distant consequences than a behavior with less-important immediate consequences.',
-        'I generally ignore warnings about possible future problems because I think the problems will be resolved before they reach crisis level.',
-        'I think that sacrificing now is usually unnecessary since future outcomes can be dealt with at a later time.',
-        'I only act to satisfy immediate concerns, figuring that I will take care of future problems that may occur at a later date.',
-        'Since my day to day work has specific outcomes, it is more important to me than behavior that has distant outcomes.'])
-
 o.questionnaire_screen('bfi',
   # John, O. P., Naumann, L. P., & Soto, C. J. (2008). Paradigm shift to the integrative Big Five trait taxonomy: History, measurement, and conceptual issues. In O. P. John, R. W. Robins, & L. A. Pervin (Eds.), Handbook of personality: Theory and research (3rd ed., pp. 114–158). New York, NY: Guilford Press. ISBN 978-1-59385-836-0
     u'How much would you agree that you are someone who…?',
@@ -289,6 +271,24 @@ o.questionnaire_screen('bfi',
         'Likes to cooperate with others',
         'Is easily distracted',
         'Is sophisticated in art, music, or literature'])
+
+o.questionnaire_screen('cfc',
+  # Strathman, A., Gleicher, F., Boninger, D. S., & Edwards, C. S. (1994). The consideration of future consequences: Weighing immediate and distant outcomes of behavior. Journal of Personality and Social Psychology, 66(4), 742–752. doi:10.1037/0022-3514.66.4.742
+    'How characteristic of you are each of these statements?',
+    scale_levels = ('Extremely\nuncharacteristic', 'Somewhat\nuncharacteristic', 'Uncertain', 'Somewhat\ncharacteristic', 'Extremely\ncharacteristic'),
+    questions = [
+        'I consider how things might be in the future, and try to influence those things with my day to day behavior.',
+        'Often I engage in a particular behavior in order to achieve outcomes that may not result for many years.',
+        'I only act to satisfy immediate concerns, figuring the future will take care of itself.',
+        'My behavior is only influenced by the immediate (i.e., a matter of days or weeks) outcomes of my actions.',
+        'My convenience is a big factor in the decisions I make or the actions I take.',
+        'I am willing to sacrifice my immediate happiness or well-being in order to achieve future outcomes.',
+        'I think it is important to take warnings about negative outcomes seriously even if the negative outcome will not occur for many years.',
+        'I think it is more important to perform a behavior with important distant consequences than a behavior with less-important immediate consequences.',
+        'I generally ignore warnings about possible future problems because I think the problems will be resolved before they reach crisis level.',
+        'I think that sacrificing now is usually unnecessary since future outcomes can be dealt with at a later time.',
+        'I only act to satisfy immediate concerns, figuring that I will take care of future problems that may occur at a later date.',
+        'Since my day to day work has specific outcomes, it is more important to me than behavior that has distant outcomes.'])
 
 # ------------------------------------------------------------
 # Done!
