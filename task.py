@@ -223,6 +223,7 @@ econ_test('loss_aversion',
 # ------------------------------------------------------------
 
 o.questionnaire_screen('cfc',
+  # Strathman, A., Gleicher, F., Boninger, D. S., & Edwards, C. S. (1994). The consideration of future consequences: Weighing immediate and distant outcomes of behavior. Journal of Personality and Social Psychology, 66(4), 742–752. doi:10.1037/0022-3514.66.4.742
     'How characteristic of you are each of these statements?',
     scale_levels = ('Extremely\nuncharacteristic', 'Somewhat\nuncharacteristic', 'Uncertain', 'Somewhat\ncharacteristic', 'Extremely\ncharacteristic'),
     questions = [
@@ -240,6 +241,7 @@ o.questionnaire_screen('cfc',
         'Since my day to day work has specific outcomes, it is more important to me than behavior that has distant outcomes.'])
 
 o.questionnaire_screen('bfi',
+  # John, O. P., Naumann, L. P., & Soto, C. J. (2008). Paradigm shift to the integrative Big Five trait taxonomy: History, measurement, and conceptual issues. In O. P. John, R. W. Robins, & L. A. Pervin (Eds.), Handbook of personality: Theory and research (3rd ed., pp. 114–158). New York, NY: Guilford Press. ISBN 978-1-59385-836-0
     u'How much would you agree that you are someone who…?',
     scale_levels = ('Disagree\nstrongly', 'Disagree\na little', 'Neither agree\nnor disagree', 'Agree\na little', 'Agree\nstrongly'),
     questions = [
