@@ -134,24 +134,46 @@ divider_bar = Rect(o.win,
 
 dec_rate = 1 / 0.25
 inc_rate = 1 / 0.523852201187
-trials = 20
+trials = 26
+  # Note that the catch-trials specifications implicitly rely on
+  # this.
 
-def econ_test(dkey_prefix, instructions, text_top, text_bottom):
+def econ_test(dkey_prefix, instructions, text_top, text_bottom,
+        catch_big, catch_small):
     with o.dkey_prefix(('econ', dkey_prefix)):
         o.instructions('instructions', instructions)
         with o.showing(divider_bar):
-            discount = .5
+            discount_guess = .5
             for trial in range(trials):
-
+                catchtype = (
+                    'small' if trial in catch_small else
+                    'big'  if trial in catch_big else
+                    None)
+                o.save(('catchtype', trial), catchtype)
+                discount = (
+                  # On catch_small trials, make the small option
+                  # dominate, so all subjects should choose the
+                  # small option.
+                    1.13 if catchtype == "small" else
+                  # On catch_big trials, make the difference
+                  # between the options lopsided so that only
+                  # very extreme preferences would be consistent
+                  # with choosing the small option.
+                    .03 if catchtype == "big" else
+                  # On normal trials, use our current guess
+                  # of the discount factor.
+                    discount_guess)
                 o.save(('discount', trial), discount)
+
                 big = uniform(5, 95)
                 small = big * discount
                 big = round(big, 2)
                 small = round(small, 2)
                 if small <= .01:
                     small = .01
-                if big <= small:
+                if not catchtype and big <= small:
                     big = small + .01
+
                 o.save(('big', trial), big)
                 o.save(('small', trial), small)
                 big = '${:.2f}'.format(big)
@@ -163,36 +185,45 @@ def econ_test(dkey_prefix, instructions, text_top, text_bottom):
                     o.text(0, .25, text_top(big, small)),
                     o.text(0, -.25, text_bottom(big, small)))
 
-                v = discount / (1 - discount)
-                if choice:
-                    v *= 1 + expovariate(inc_rate)
-                else:
-                    v /= 1 + expovariate(dec_rate)
-                discount = v / (v + 1)
+                if not catchtype:
+                    v = discount_guess / (1 - discount_guess)
+                    if choice:
+                        v *= 1 + expovariate(inc_rate)
+                    else:
+                        v /= 1 + expovariate(dec_rate)
+                    discount_guess = v / (v + 1)
 
 econ_test('patience',
     'In this task, you will make a series of hypothetical choices.\n\n'
         'Each trial will present you with a hypothetical choice between two amounts of money delivered to you at a given time in the future. Press the up arrow key if you would prefer the upper option and the down arrow key if you would prefer the lower option.\n\n'
         'Even though these are completely hypothetical decisions, try your best to imagine what you would choose if you were really offered these choices.',
     text_top = lambda llr, ssr: '{} today'.format(ssr),
-    text_bottom = lambda llr, ssr: '{} in one month'.format(llr))
+    text_bottom = lambda llr, ssr: '{} in one month'.format(llr),
+    catch_big = (5, 14, 23),
+    catch_small = (2, 6, 9))
 
 econ_test('shifted_patience',
     'The next task is like the previous one, except the top option is delayed by one month and the bottom option is delayed by two months.',
     text_top = lambda llr, ssr: '{} in one month'.format(ssr),
-    text_bottom = lambda llr, ssr: '{} in two months'.format(llr))
+    text_bottom = lambda llr, ssr: '{} in two months'.format(llr),
+    catch_big = (3, 6, 8),
+    catch_small = (1, 16, 22))
 
 econ_test('risk_aversion',
     'In this task, you will choose between a gamble and a sure gain.\n\n'
         'The gamble has a a 95% chance of giving you money and a 5% chance of yielding nothing. The other option has a 100% chance of yielding the indicated amount.',
     text_top = lambda risky, sure: '{} (100% chance)'.format(sure),
-    text_bottom = lambda risky, sure: '{} (95% chance) or\nnothing (5% chance)'.format(risky))
+    text_bottom = lambda risky, sure: '{} (95% chance) or\nnothing (5% chance)'.format(risky),
+    catch_big = (10, 14, 25),
+    catch_small = (5, 17, 20))
 
 econ_test('loss_aversion',
     'In this task, you will choose whether or not to take a gamble.\n\n'
         'The gamble is equally likely to make you gain or lose money, but the amount to be gained and the amount to be lost may differ.',
     text_top = lambda gain, loss: 'Nothing (100% chance)',
-    text_bottom = lambda gain, loss: 'Gain {} (50% chance) or\nlose {} (50% chance)'.format(gain, loss))
+    text_bottom = lambda gain, loss: 'Gain {} (50% chance) or\nlose {} (50% chance)'.format(gain, loss),
+    catch_big = (1, 2, 8),
+    catch_small = (0, 16, 23))
 
 # ------------------------------------------------------------
 # Administer questionnaires
