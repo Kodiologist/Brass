@@ -1,19 +1,19 @@
-`SchizoidPy`_ is required.
+This repository houses code for running `Brass`_. `SchizoidPy`_ is required.
 
 ``task.py``
-    Code for the initial session in which subjects make commitments and complete pretests. Some information is sent to the server.
+    Task code for the initial, in-laboratory testing session in which subjects make commitments and complete pretests. Some information is sent to the server for the benefit of ``checkin.pl`` and ``notifier.pl``.
 
 ``commitments.py``
-   A library for ``task.py``.
+    A library for ``task.py``.
 
 ``receiver.pl``
-   A CGI program that recieves messages from ``task.py`` and updates the database accordingly.
+    A CGI program that receives messages from ``task.py`` and updates the database accordingly.
 
 ``checkin.pl``
-    A CGI program subjects use to check in.
+    A CGI program subjects use to check in each day.
 
 ``notifier.pl``
-    Should be run on the server once per day (although it's idempotent: it will only send one message per subject per day) at 9 PM local time.
+    A program that should be run on the server once per day (although it's idempotent: it will only send one message per subject per day) at 9 PM local time.
 
 ``schema.sql``
     A schema for the server's SQLite database.
