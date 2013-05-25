@@ -52,13 +52,6 @@ class EmailDialog(wx.Dialog):
             wx.Size(0, 10),
             (okay(self, True), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
 
-def stringInputDialog(prompt):
-    d = StringInputDialog(prompt)
-    d.CenterOnScreen(wx.BOTH)
-    d.ShowModal()
-    d.Destroy()
-    return d.input.GetValue()
-
 def server_send(subject, email, activity_names):
     'Send email addresses and activites to the server.'
 
@@ -75,58 +68,6 @@ def server_send(subject, email, activity_names):
         json = export_json)))
     if par['debug']: print f.read()
     f.close()
-
-# ------------------------------------------------------------
-# Preliminaries
-# ------------------------------------------------------------
-
-# Check for a network connection.
-if not par['debug']:
-    assert '<title>Example Domain</title>' in urllib2.urlopen('http://example.org').read()
-
-if par['debug_serverside']:
-    server_send('test1', par['debug_email'], ['Studying', 'Jogging', 'Eating'])
-    exit()
-
-init_wx()
-
-if par['debug']:
-    o.data['subject'] = 'test'
-else:
-    o.get_subject_id('Decision-Making')
-
-o.start_clock()
-
-# ------------------------------------------------------------
-# Get an email address and commitments
-# ------------------------------------------------------------
-
-with o.timestamps('email'):
-    while True:
-        dlg = EmailDialog("After you leave the lab, we'll communicate with you by email for the rest of the study.\n\nEnter your email address twice.")
-        dlg.CenterOnScreen(wx.BOTH)
-        dlg.ShowModal()
-        dlg.Destroy()
-        s = dlg.input1.GetValue().strip()
-        if s != dlg.input2.GetValue().strip():
-            message("The addresses you entered don't match.")
-        elif ' ' in s:
-            message("Spaces aren't allowed in email addresses.")
-        elif '@' not in s:
-            message('Your email address is missing an "@".')
-        else:
-            o.save('email', s)
-            break
-
-with o.timestamps('commitments'):
-    o.save('commitments', commitments.get())
-
-server_send(o.data['subject'], o.data['email'],
-    [d['name'] for d in o.data['commitments']['activities']])
-
-# ------------------------------------------------------------
-# Administer econometric tests
-# ------------------------------------------------------------
 
 divider_bar = Rect(o.win,
     fillColor = 'black', lineColor = 'black',
@@ -192,6 +133,58 @@ def econ_test(dkey_prefix, instructions, text_top, text_bottom,
                     else:
                         v /= 1 + expovariate(dec_rate)
                     discount_guess = v / (v + 1)
+
+# ------------------------------------------------------------
+# Preliminaries
+# ------------------------------------------------------------
+
+# Check for a network connection.
+if not par['debug']:
+    assert '<title>Example Domain</title>' in urllib2.urlopen('http://example.org').read()
+
+if par['debug_serverside']:
+    server_send('test1', par['debug_email'], ['Studying', 'Jogging', 'Eating'])
+    exit()
+
+init_wx()
+
+if par['debug']:
+    o.data['subject'] = 'test'
+else:
+    o.get_subject_id('Decision-Making')
+
+o.start_clock()
+
+# ------------------------------------------------------------
+# Get an email address and commitments
+# ------------------------------------------------------------
+
+with o.timestamps('email'):
+    while True:
+        dlg = EmailDialog("After you leave the lab, we'll communicate with you by email for the rest of the study.\n\nEnter your email address twice.")
+        dlg.CenterOnScreen(wx.BOTH)
+        dlg.ShowModal()
+        dlg.Destroy()
+        s = dlg.input1.GetValue().strip()
+        if s != dlg.input2.GetValue().strip():
+            message("The addresses you entered don't match.")
+        elif ' ' in s:
+            message("Spaces aren't allowed in email addresses.")
+        elif '@' not in s:
+            message('Your email address is missing an "@".')
+        else:
+            o.save('email', s)
+            break
+
+with o.timestamps('commitments'):
+    o.save('commitments', commitments.get())
+
+server_send(o.data['subject'], o.data['email'],
+    [d['name'] for d in o.data['commitments']['activities']])
+
+# ------------------------------------------------------------
+# Administer econometric tests
+# ------------------------------------------------------------
 
 econ_test('patience',
     'In this task, you will make a series of hypothetical choices.\n\n'
