@@ -73,6 +73,11 @@ def get():
 # Private
 # ---------------------------------------------------------------
 
+def choice(*a, **kw):
+   x = wx.Choice(*a, **kw)
+   x.SetSelection(0)
+   return x
+
 class ActivityListDialog(wx.Dialog):
     def __init__(self, prompt):
         wx.Dialog.__init__(self, None)
@@ -111,7 +116,7 @@ class CommitmentDialog(wx.Dialog):
 
         self.activities = [
             dict(name = x, fields = map(
-                lambda _: wx.Choice(panel, -1, choices = self.choices),
+                lambda _: choice(panel, -1, choices = self.choices),
                 range(checkin_range)))
             for x in activities]
         rowlabel_cols = 3
@@ -149,9 +154,9 @@ class CommitmentDialog(wx.Dialog):
             # Wakeup-time column
             timepan = wx.Panel(panel)
             self.wakeups.append(dict(
-                h = wx.Choice(timepan, choices = ['---'] + map(str, range(1, 13))),
-                m = wx.Choice(timepan, choices = ['%02d' % n for n in range(60)]),
-                ampm = wx.Choice(timepan, choices = ['AM', 'PM'])))
+                h = choice(timepan, choices = ['---'] + map(str, range(1, 13))),
+                m = choice(timepan, choices = ['%02d' % n for n in range(60)]),
+                ampm = choice(timepan, choices = ['AM', 'PM'])))
             fgs.Add(timepan)
             box(timepan, wx.HORIZONTAL,
                 self.wakeups[-1]['h'],
