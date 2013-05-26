@@ -53,6 +53,8 @@ class EmailDialog(wx.Dialog):
 def server_send(subject, email, activity_names):
     'Send email addresses and activites to the server.'
 
+    if not par['use_server']: return
+
     export_json = json.dumps(dict(
         time = int(time()),
         subject = subject,
@@ -137,7 +139,7 @@ def econ_test(dkey_prefix, instructions, text_top, text_bottom,
 # ------------------------------------------------------------
 
 # Check for a network connection.
-if not par['debug']:
+if par['use_server'] and not par['debug']:
     assert '<title>Example Domain</title>' in urllib2.urlopen('http://example.org').read()
 
 if par['debug_serverside']:
