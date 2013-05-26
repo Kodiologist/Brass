@@ -27,10 +27,9 @@ def long_wrapped_text(parent, string, wrap = 300, font_size = 12):
     x.Wrap(wrap)
     return x
 
-def get():
-
-    # Ask the subject which activities they want to tell us
-    # their commitments about.
+def get_activities():
+    """Ask the subject which activities they want to tell us
+    their commitments about."""
     dlg = ActivityListDialog(
         "Over the next fourteen days (two weeks), are there any activities you plan to spend certain amounts of time on on certain days? For example, perhaps you want to exercise for an hour tomorrow, or study for half an hour every day. List any such activities below. On the next screen, we'll ask how much time you intend to spend on them each day. When choosing what to write here, however:\n\n"
         u'• Leave fields blank rather than writing "N/A" or the like.\n\n'
@@ -40,11 +39,12 @@ def get():
     dlg.CenterOnScreen(wx.BOTH)
     dlg.ShowModal()
     dlg.Destroy()
-    activities = [s[0].upper() + s[1:]
+    return [s[0].upper() + s[1:]
         for s in [x.GetValue().strip() for x in dlg.inputs] if s]
-    
-    # Solicit the actual commitments for activity and day, as well
-    # as wakeup times.
+
+def get_commitments(activities):
+    """Solicit the actual commitments for activity and day, as
+    well as wakeup times."""
     activity_help_text = (
         '''Now tell us how much time you plan to spend on each activity on each day. Round your answers to the nearest 15 minutes. If you have no plans for a given day and activity, leave that cell of the grid set to "---".\n\n''')
     core_help_text = (

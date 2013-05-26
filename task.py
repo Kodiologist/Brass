@@ -50,7 +50,7 @@ class EmailDialog(wx.Dialog):
             (okay(self, True), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
 
 def server_send(subject, email, activity_names):
-    'Send email addresses and activites to the server.'
+    'Send email addresses and activities to the server.'
 
     if not par['use_server']: return
 
@@ -175,11 +175,13 @@ with o.timestamps('email'):
             o.save('email', s)
             break
 
-with o.timestamps('commitments'):
-    o.save('commitments', commitments.get())
+with o.timestamps('activities'):
+    activities = commitments.get_activities()
 
-server_send(o.data['subject'], o.data['email'],
-    [d['name'] for d in o.data['commitments']['activities']])
+server_send(o.data['subject'], o.data['email'], activities)
+
+with o.timestamps('commitments'):
+    o.save('commitments', commitments.get_commitments(activities))
 
 # ------------------------------------------------------------
 # Administer econometric tests
