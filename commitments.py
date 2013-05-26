@@ -19,6 +19,14 @@ max_activities = 5
 def dateplus(d, n):
     return date.fromordinal(d.toordinal() + n)
 
+def long_wrapped_text(parent, string, wrap = 300, font_size = 12):
+    x = wx.StaticText(parent, -1, string)
+    font = x.GetFont()
+    font.SetPointSize(font_size)
+    x.SetFont(font)
+    x.Wrap(wrap)
+    return x
+
 def get():
 
     # Ask the subject which activities they want to tell us
@@ -74,19 +82,17 @@ class ActivityListDialog(wx.Dialog):
         self.inputs = []
         for i in range(max_activities):
             fgs.Add(wrapped_text(panel, 'Activity {}'.format(i + 1)),
-                border = 5, flag = wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER_VERTICAL)
+                border = 10, flag = wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER_VERTICAL)
             self.inputs.append(wx.TextCtrl(panel, size = (300, -1)))
             fgs.Add(self.inputs[-1])
         panel.SetSizer(fgs)
 
-        twrap = 500
-        prompt = wx.StaticText(self, -1, prompt)
-        prompt.Wrap(twrap)
+        pwrap = 500
+        prompt = long_wrapped_text(self, prompt, wrap = pwrap)
 
         self.inputs[0].SetFocus()
         box(self, wx.VERTICAL,
-            wx.Size(twrap + 10, 10),
-            (prompt, 0, wx.ALIGN_CENTER_HORIZONTAL),
+            (prompt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 10),
             panel,
             wx.Size(0, 10),
             (okay(self), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
@@ -168,7 +174,25 @@ class CommitmentDialog(wx.Dialog):
             (okay(self), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
 
     def help(self, event):
-        messageDialog(message = self.help_text, title = 'Help', aStyle = wx.OK)
+        d = MyMessageDialog(title = 'Help', string = self.help_text)
+        d.ShowModal()
+        d.Destroy()
+
+class MyMessageDialog(wx.Dialog):
+
+    def __init__(self, parent = None, title = '', string = ''):
+        wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition)
+
+        self.panel = wx.Panel(self)
+        self.label = long_wrapped_text(self.panel, string, 500)
+        box(self.panel, wx.HORIZONTAL,
+            (self.label, 0, wx.LEFT | wx.RIGHT, 10))
+
+        box(self, wx.VERTICAL,
+            wx.Size(0, 10),
+            self.panel,
+            wx.Size(0, 10),
+            (okay(self, True), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)        
 
 def digest_wakeup(wakeup):
     h, m, ampm = wakeup['h'].GetStringSelection(), wakeup['m'].GetStringSelection(), wakeup['ampm'].GetStringSelection()

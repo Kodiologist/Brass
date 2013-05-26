@@ -11,8 +11,9 @@ import wx
 from wxPython.lib.dialogs import messageDialog
 from psychopy.visual import Rect
 import schizoidpy
-from schizoidpy import init_wx, box, okay, wrapped_text
+from schizoidpy import init_wx, box, okay
 import commitments
+from commitments import long_wrapped_text
 
 par = dict(zip(argv[1::2], argv[2::2])) # DEPLOYMENT SCRIPT EDITS THIS LINE
 
@@ -42,13 +43,10 @@ class EmailDialog(wx.Dialog):
         self.input1.SetFocus()
         self.input2 = wx.TextCtrl(self)
         box(self, wx.VERTICAL,
-            wx.Size(small_dialog_width, 10),
-            (wrapped_text(self, prompt), 0, wx.ALIGN_CENTER_HORIZONTAL),
-            wx.Size(0, 10),
-            (self.input1, 0, wx.EXPAND),
-            wx.Size(0, 5),
-            (self.input2, 0, wx.EXPAND),
-            wx.Size(0, 10),
+            wx.Size(small_dialog_width + 20, 10),
+            (long_wrapped_text(self, prompt), 0, wx.ALIGN_CENTER_HORIZONTAL),
+            (self.input1, 0, wx.EXPAND | wx.ALL, 10),
+            (self.input2, 0, wx.EXPAND | wx.ALL, 10),
             (okay(self, True), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
 
 def server_send(subject, email, activity_names):
