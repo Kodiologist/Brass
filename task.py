@@ -81,7 +81,7 @@ trials = 26
 def econ_test(dkey_prefix, instructions, text_top, text_bottom,
         catch_big, catch_small):
     with o.dkey_prefix(('econ', dkey_prefix)):
-        o.instructions('instructions', instructions)
+        o.instructions('instructions', instructions, wrap = 1.5)
         with o.showing(divider_bar):
             discount_guess = .5
             for trial in range(trials):
