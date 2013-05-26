@@ -4,6 +4,7 @@ from datetime import date
 import re
 import wx
 import wx.lib.masked as masked
+from wxPython.lib.dialogs import messageDialog
 from schizoidpy import box, wrapped_text, okay, init_wx, SchizoidDlg
 import operator; mcall = operator.methodcaller
 
@@ -22,17 +23,33 @@ def get():
 
     # Ask the subject which activities they want to tell us
     # their commitments about.
-    dlg = SchizoidDlg(title = 'Entry')
-    for i in range(max_activities):
-        dlg.addField('Activity {}'.format(i + 1), width = 200)
-    dlg.show()
+    dlg = ActivityListDialog(
+        "Over the next fourteen days (two weeks), are there any activities you plan to spend certain amounts of time on on certain days? For example, perhaps you want to exercise for an hour tomorrow, or study for half an hour every day. List any such activities below. On the next screen, we'll ask how much time you intend to spend on them each day. When choosing what to write here, however:\n\n"
+        '• Leave fields blank rather than writing "N/A" or the like.\n\n'
+        "• Don't include sleep habits. We'll ask about those separately.\n\n"
+        "• Don't include activities you merely EXPECT to do and don't especially want to accomplish. For example, you might spend an hour every day commuting, but you probably aren't interested in commuting for its own sake.\n\n"
+        "• Don't include activities if you don't have plans for particular days. For example, don't list exercise if you plan to exercise five days a week but you haven't yet decided which days.\n\n")
+    dlg.CenterOnScreen(wx.BOTH)
+    dlg.ShowModal()
+    dlg.Destroy()
     activities = [s[0].upper() + s[1:]
-        for s in [s.strip() for s in dlg.data] if s]
+        for s in [x.GetValue().strip() for x in dlg.inputs] if s]
     
     # Solicit the actual commitments for activity and day, as well
     # as wakeup times.
-    dlg = CommitmentDialog(activities = activities)
+    activity_help_text = (
+        '''Now tell us how much time you plan to spend on each activity on each day. Round your answers to the nearest 15 minutes. If you have no plans for a given day and activity, leave that cell of the grid set to "---".\n\n''')
+    core_help_text = (
+        '''Tell us what time you plan to wake up each day. If for a given day you don't plan to get up at a particular time (on a Saturday, for example), leave the hour set to "---".\n\n'''
+        '''The "Notes" column is optional. Use it if there are special circumstances you'd like to mention (e.g., a class will be canceled, so you don't need to get up early).\n\n'''
+        '''Press the "Help" button at the top of the window to see this message again.''')
+    dlg = CommitmentDialog(activities = activities, help_text =
+        activity_help_text + 'Please also ' + core_help_text[0].lower() + core_help_text[1:]
+            if activities
+            else core_help_text)
     dlg.CenterOnScreen(wx.BOTH)
+    dlg.Show()
+    dlg.help(None)
     dlg.ShowModal()
     dlg.Destroy()
     return dict(
@@ -48,6 +65,32 @@ def get():
 # Private
 # ---------------------------------------------------------------
 
+class ActivityListDialog(wx.Dialog):
+    def __init__(self, prompt):
+        wx.Dialog.__init__(self, None)
+
+        panel = wx.Panel(self)
+        fgs = wx.FlexGridSizer(cols = 2, vgap = 5, hgap = 5)
+        self.inputs = []
+        for i in range(max_activities):
+            fgs.Add(wrapped_text(panel, 'Activity {}'.format(i + 1)),
+                border = 5, flag = wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER_VERTICAL)
+            self.inputs.append(wx.TextCtrl(panel, size = (300, -1)))
+            fgs.Add(self.inputs[-1])
+        panel.SetSizer(fgs)
+
+        twrap = 500
+        prompt = wx.StaticText(self, -1, prompt)
+        prompt.Wrap(twrap)
+
+        self.inputs[0].SetFocus()
+        box(self, wx.VERTICAL,
+            wx.Size(twrap + 10, 10),
+            (prompt, 0, wx.ALIGN_CENTER_HORIZONTAL),
+            panel,
+            wx.Size(0, 10),
+            (okay(self), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
+
 class CommitmentDialog(wx.Dialog):
 
     choices = (['---'] +
@@ -55,7 +98,7 @@ class CommitmentDialog(wx.Dialog):
             for h in range(max_committed_hours) for m in (0, 15, 30, 45)][1:] +
         ["{} h 0 min".format(max_committed_hours)])
 
-    def __init__(self, parent = None, title = '', activities = None):
+    def __init__(self, parent = None, title = '', activities = None, help_text = ''):
         wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition)
 
         panel = wx.Panel(self)
@@ -115,9 +158,17 @@ class CommitmentDialog(wx.Dialog):
         fgs.Add(wx.Size(0, 5))
         panel.SetSizer(fgs)
 
+        hbutton = wx.Button(self, wx.ID_HELP)
+        self.help_text = help_text
+        hbutton.Bind(wx.EVT_BUTTON, self.help)
+
         box(self, wx.VERTICAL,
+            hbutton,
             panel,
             (okay(self), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)
+
+    def help(self, event):
+        messageDialog(message = self.help_text, title = 'Help', aStyle = wx.OK)
 
 def digest_wakeup(wakeup):
     h, m, ampm = wakeup['h'].GetStringSelection(), wakeup['m'].GetStringSelection(), wakeup['ampm'].GetStringSelection()
