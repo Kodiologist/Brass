@@ -19,6 +19,7 @@ par = dict(zip(argv[1::2], argv[2::2])) # DEPLOYMENT SCRIPT EDITS THIS LINE
 o = schizoidpy.Task(
     button_radius = .12,
     okay_button_pos = (0, -.7))
+o.set_pyglet_visible(False)
 o.save('task', par['task'])
 
 small_dialog_width = 300
@@ -185,6 +186,8 @@ server_send(o.data['subject'], o.data['email'],
 # ------------------------------------------------------------
 # Administer econometric tests
 # ------------------------------------------------------------
+
+o.set_pyglet_visible(True)
 
 econ_test('patience',
     'In this task, you will make a series of hypothetical choices.\n\n'
