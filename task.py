@@ -19,7 +19,7 @@ par = dict(zip(argv[1::2], argv[2::2])) # DEPLOYMENT SCRIPT EDITS THIS LINE
 o = schizoidpy.Task(
     button_radius = .12,
     okay_button_pos = (0, -.7))
-o.save('task_version', par['task_version'])
+o.save('task', par['task'])
 
 small_dialog_width = 300
 
