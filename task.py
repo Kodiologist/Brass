@@ -34,8 +34,6 @@ def message(msg):
     messageDialog(message = msg, title = '', aStyle = wx.OK)
 
 class EmailDialog(wx.Dialog):
-    """Like textEntryDialog, but the text is wrapped and there is
-    no "Cancel" button."""
     def __init__(self, prompt):
         wx.Dialog.__init__(self, None)
         self.input1 = wx.TextCtrl(self)
