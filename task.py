@@ -71,6 +71,7 @@ def server_send(subject, email, activity_names):
 divider_bar = Rect(o.win,
     fillColor = 'black', lineColor = 'black',
     width = 1.5, height = .01)
+prompt = o.text(0, .8, 'Which option would you prefer?')
 
 dec_rate = 1 / 0.25
 inc_rate = 1 / 0.523852201187
@@ -82,7 +83,7 @@ def econ_test(dkey_prefix, instructions, text_top, text_bottom,
         catch_big, catch_small):
     with o.dkey_prefix(('econ', dkey_prefix)):
         o.instructions('instructions', instructions, wrap = 1.5)
-        with o.showing(divider_bar):
+        with o.showing(divider_bar, prompt):
             discount_guess = .5
             for trial in range(trials):
                 catchtype = (
