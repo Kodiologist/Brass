@@ -11,7 +11,7 @@ use DBIx::Simple;
 use Digest::HMAC_MD5 'hmac_md5_hex';
 use JSON::XS 'decode_json';
 
-my $timestamp_tolerance = 30; # In seconds
+my $timestamp_tolerance = 60; # In seconds
 
 # --------------------------------------------------
 
@@ -26,8 +26,7 @@ unless ($ENV{REQUEST_METHOD} eq 'POST'
         and exists $cgi{hmac}
         and exists $cgi{json}
         and eval {%r = %{decode_json $cgi{json}}}
-        and $r{time} <= $time_loaded
-        and $time_loaded - $r{time} <= $timestamp_tolerance
+        and abs($time_loaded - $r{time}) <= $timestamp_tolerance
         and hmac_md5_hex($cgi{json}, $p{hmac_key}) eq $cgi{hmac})
    {say 'Status: 403 Forbidden';
     say 'Content-Type: text/plain; charset=utf-8';
