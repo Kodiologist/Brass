@@ -54,9 +54,9 @@ eval
 
     <!DOCTYPE html>
     <html lang="en-US">
-    <head><meta charset="UTF-8"><title>Wakeup checkin page</title></head>
+    <head><meta charset="UTF-8"><title>Daily check-in page</title></head>
     <body>
-    <h1 style="text-align: center">Wakeup checkin page</h1>';
+    <h1 style="text-align: center">Daily check-in page</h1>';
 
     if ($ENV{REQUEST_METHOD} eq 'POST' and $cgi{submitted})
        {my $done = 0;
@@ -94,14 +94,23 @@ eval
         say sprintf '<div style="%s"><span style="%s">%s</span></div>',
             'text-align: center',
             'padding: .25em .5em; background-color: #ff8;',
-            encode_entities($@ || 'Checkin succeeded.' . ($done
+            encode_entities($@ || 'Check-in succeeded.' . ($done
               ? q( Congratulations; you've completed this study.)
               : ''));}
 
-    say '<p>Submit this form immediately upon waking up each day. (You can fill it out after you wake up or before you go to bed the day before.)</p>';
+    say
+        +(@activities
+          ? '<p>Submit this form immediately upon waking up each day. You can choose activity times after you wake up or before you go to bed the day before.'
+          : '<p>Hit the "submit" button immediately upon waking up each day.'),
+        q( Make sure, however, that you only press the "submit" button after you're out of bed and aren't in danger of falling asleep again. We're interested in what time you begin your day.</p>);
+
+    say "\n<hr>\n\n";
 
     say sprintf '<form method="POST" action="%s">',
         encode_entities sprintf $p{checkin_url_fmt}, $checkin_code;
+
+    @activities
+        and say '<p>How much time did you spend on each of these activities yesterday? Round you answers to the nearest 15 minutes.</p>';
 
     say sprintf '<p>%s</p>', join '<br>', map
        {sprintf "<label>%s: \n<select name='activity$_'>%s</select>\n</label>",

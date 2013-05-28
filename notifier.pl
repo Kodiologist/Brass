@@ -97,3 +97,5 @@ Welcome to the Decision-Making and Habits study. Each day, immediately after you
 and submit the form.
 
 Bookmark this page. You can help yourself remember to check in by loading up the page on your phone or computer before going to bed each night. Or, you can set up email reminders by sending an email to every2am@followupthen.com or by making events on Google Calendar. Google Calendar also has SMS reminders.
+
+Beware: if you forget to check in on two separate days, you'll be kicked out of the study. We'll assume you've forgotten if you haven't checked in for a given day by 9 PM.
