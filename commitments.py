@@ -27,6 +27,13 @@ def long_wrapped_text(parent, string, wrap = 300, font_size = 12):
     x.Wrap(wrap)
     return x
 
+short_wrap_width = 100
+def short_wrapped_text(parent, string, wrap = short_wrap_width, exact = False):
+    x = wx.StaticText(parent, -1, string, size =
+       (short_wrap_width if exact else -1, -1))
+    x.Wrap(wrap)
+    return x
+
 def get_activities():
     """Ask the subject which activities they want to tell us
     their commitments about."""
@@ -134,9 +141,9 @@ class CommitmentDialog(wx.Dialog):
         # Add the column headers.
         for _ in range(rowlabel_cols): fgs.Add(wx.Size(0, 0))
         for act in self.activities:
-            fgs.Add(wrapped_text(panel, act['name']), 0, wx.ALIGN_CENTER)
-        fgs.Add(wrapped_text(panel, 'Wake-up time'))
-        fgs.Add(wrapped_text(panel, 'Notes'))
+            fgs.Add(short_wrapped_text(panel, act['name'], exact = True), 0, wx.ALIGN_CENTER)
+        fgs.Add(short_wrapped_text(panel, 'Wake-up time'), 0, wx.ALIGN_BOTTOM)
+        fgs.Add(short_wrapped_text(panel, 'Notes'), 0, wx.ALIGN_BOTTOM)
         # Add the rows for each day.
         self.dates = []
         self.notes = []
