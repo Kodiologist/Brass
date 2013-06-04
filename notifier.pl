@@ -26,7 +26,7 @@ sub email
    {$sender ||= Mail::Sender->new({on_errors => 'die',
        %{decode_json read_file $p{sender_config_json_path}}});
     my $h = {@_};
-    say STDERR sprintf '%s: Brass notifier: Sending: %s',
+    say sprintf '%s: Brass notifier: Sending: %s',
         scalar(localtime),
         encode_json($h);
     $h->{msg} .= "\n\n---\nThis is an automated message. However, you can reply to it to write to the experimenter.";
