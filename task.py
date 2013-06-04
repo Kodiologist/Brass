@@ -37,7 +37,8 @@ def message(msg):
 
 class EmailDialog(wx.Dialog):
     def __init__(self, prompt):
-        wx.Dialog.__init__(self, None)
+        wx.Dialog.__init__(self, None, style =
+            wx.DEFAULT_DIALOG_STYLE & ~wx.CLOSE_BOX)
         self.input1 = wx.TextCtrl(self)
         #self.input.Bind(wx.EVT_CHAR, generic_keypress(self))
         self.input1.SetFocus()

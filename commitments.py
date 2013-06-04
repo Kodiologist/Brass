@@ -87,7 +87,8 @@ def choice(*a, **kw):
 
 class ActivityListDialog(wx.Dialog):
     def __init__(self, prompt):
-        wx.Dialog.__init__(self, None)
+        wx.Dialog.__init__(self, None, style =
+            wx.DEFAULT_DIALOG_STYLE & ~wx.CLOSE_BOX)
 
         panel = wx.Panel(self)
         fgs = wx.FlexGridSizer(cols = 2, vgap = 5, hgap = 5)
@@ -117,7 +118,8 @@ class CommitmentDialog(wx.Dialog):
         ["{} h 0 min".format(max_committed_hours)])
 
     def __init__(self, parent = None, title = '', activities = None, help_text = ''):
-        wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition)
+        wx.Dialog.__init__(self, parent, -1, title, wx.DefaultPosition, style =
+            wx.DEFAULT_DIALOG_STYLE & ~wx.CLOSE_BOX)
 
         panel = wx.Panel(self)
 
