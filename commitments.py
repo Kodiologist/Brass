@@ -41,7 +41,7 @@ def get_activities():
     """Ask the subject which activities they want to tell us
     their commitments about."""
     dlg = ActivityListDialog(
-        "Over the next fourteen days (two weeks), are there any activities that you plan to spend certain amounts of time on on certain days? For example, perhaps you want to exercise for an hour tomorrow, or study for half an hour every day. List any such activities below. On the next screen, we'll ask how much time you intend to spend on each activity each day. When choosing what to write here, however:\n\n"
+        """Over the next fourteen days (two weeks), are there any activities that you plan to spend certain amounts of time on on certain days? For example, perhaps you want to exercise for an hour tomorrow, or study for half an hour every day. List any such activities below (e.g., "Exercise", "Study history"). On the next screen, we'll ask how much time you intend to spend on each activity each day. When choosing what to write here, however:\n\n"""
         u'• Leave fields blank rather than writing "N/A" or the like.\n\n'
         u"• Don't include activities if you don't have plans for particular days. For example, don't list exercise if you plan to exercise five days a week but you haven't yet decided which days.\n\n"
         u"• Don't include activities you're obliged to do and don't especially want to accomplish. For example, you might spend an hour every day commuting, but you probably aren't interested in commuting for its own sake.\n\n"
