@@ -81,11 +81,11 @@ trials = 26
   # this.
 
 def econ_test(dkey_prefix, instructions, text_top, text_bottom,
-        catch_big, catch_small):
+        initial_discount_guess, catch_big, catch_small):
     with o.dkey_prefix(('econ', dkey_prefix)):
         o.instructions('instructions', instructions, wrap = 1.5)
         with o.showing(divider_bar, prompt):
-            discount_guess = .5
+            discount_guess = initial_discount_guess
             for trial in range(trials):
                 catchtype = (
                     'small' if trial in catch_small else
@@ -197,6 +197,7 @@ econ_test('patience',
         'Even though these are completely hypothetical decisions, try your best to imagine what you would choose if you were really offered these choices.',
     text_top = lambda llr, ssr: '{} today'.format(ssr),
     text_bottom = lambda llr, ssr: '{} in one month'.format(llr),
+    initial_discount_guess = .5,
     catch_big = (5, 14, 23),
     catch_small = (2, 6, 9))
 
@@ -204,6 +205,7 @@ econ_test('shifted_patience',
     'The next task is like the previous one, except the top option is delayed by one month and the bottom option is delayed by two months.',
     text_top = lambda llr, ssr: '{} in one month'.format(ssr),
     text_bottom = lambda llr, ssr: '{} in two months'.format(llr),
+    initial_discount_guess = .5,
     catch_big = (3, 6, 8),
     catch_small = (1, 16, 22))
 
@@ -212,6 +214,7 @@ econ_test('risk_aversion',
         'The gamble has a a 95% chance of giving you money and a 5% chance of yielding nothing. The other option has a 100% chance of yielding the indicated amount.',
     text_top = lambda risky, sure: '{} (100% chance)'.format(sure),
     text_bottom = lambda risky, sure: '{} (95% chance) or\nnothing (5% chance)'.format(risky),
+    initial_discount_guess = .95,
     catch_big = (10, 14, 25),
     catch_small = (5, 17, 20))
 
@@ -220,6 +223,7 @@ econ_test('loss_aversion',
         'The gamble is equally likely to make you gain or lose money, but the amount to be gained and the amount to be lost may differ.',
     text_top = lambda gain, loss: 'Nothing (100% chance)',
     text_bottom = lambda gain, loss: 'Gain {} (50% chance) or\nlose {} (50% chance)'.format(gain, loss),
+    initial_discount_guess = .5,
     catch_big = (1, 2, 8),
     catch_small = (0, 16, 23))
 
