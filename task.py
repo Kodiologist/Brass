@@ -8,12 +8,11 @@ from time import time
 import urllib, urllib2
 import hmac, json
 import wx
-from wxPython.lib.dialogs import messageDialog
 from psychopy.visual import Rect
 import schizoidpy
 from schizoidpy import init_wx, box, okay
 import commitments
-from commitments import long_wrapped_text
+from commitments import long_wrapped_text, message
 
 par = dict(zip(argv[1::2], argv[2::2])) # DEPLOYMENT SCRIPT EDITS THIS LINE
 
@@ -31,9 +30,6 @@ small_dialog_width = 300
 
 def d8(d):
     return d.year * 10000  + d.month * 100 + d.day
-
-def message(msg):
-    messageDialog(message = msg, title = '', aStyle = wx.OK)
 
 class EmailDialog(wx.Dialog):
     def __init__(self, prompt):

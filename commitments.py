@@ -27,6 +27,9 @@ def long_wrapped_text(parent, string, wrap = 300, font_size = 12):
     x.Wrap(wrap)
     return x
 
+def message(msg):
+    messageDialog(message = msg, title = '', aStyle = wx.OK)
+
 short_wrap_width = 100
 def short_wrapped_text(parent, string, wrap = short_wrap_width, exact = False):
     x = wx.StaticText(parent, -1, string, size =
@@ -44,10 +47,16 @@ def get_activities():
         u"• Don't include activities you're obliged to do and don't especially want to accomplish. For example, you might spend an hour every day commuting, but you probably aren't interested in commuting for its own sake.\n\n"
         u"• Don't include sleep habits. We'll ask about those separately.\n\n")
     dlg.CenterOnScreen(wx.BOTH)
-    dlg.ShowModal()
+    while True:
+        dlg.ShowModal()
+        activities = [s[0].upper() + s[1:]
+            for s in [x.GetValue().strip() for x in dlg.inputs] if s]
+        if any(na_like(s) for s in activities):
+            message('Leave fields blank rather than writing "N/A" or the like.')
+        else:
+            break
     dlg.Destroy()
-    return [s[0].upper() + s[1:]
-        for s in [x.GetValue().strip() for x in dlg.inputs] if s]
+    return activities
 
 def get_commitments(activities):
     """Solicit the actual commitments for activity and day, as
@@ -207,6 +216,10 @@ class MyMessageDialog(wx.Dialog):
             self.panel,
             wx.Size(0, 10),
             (okay(self, True), 0, wx.ALIGN_CENTER_HORIZONTAL)).Fit(self)        
+
+def na_like(s):
+    s = ''.join(c.lower() for c in s if c.isalpha())
+    return s in ('na', 'notapplicable', 'nil', 'no', 'noplan', 'noplans', 'nothing')
 
 def digest_wakeup(wakeup):
     h, m, ampm = wakeup['h'].GetStringSelection(), wakeup['m'].GetStringSelection(), wakeup['ampm'].GetStringSelection()
