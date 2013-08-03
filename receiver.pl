@@ -38,11 +38,10 @@ unless ($ENV{REQUEST_METHOD} eq 'POST'
 
 eval
 
-   {my $db = DBIx::Simple->connect("dbi:SQLite:dbname=$p{database_path}",
-        '', '', {RaiseError => 1});
-
-    $db->{sqlite_unicode} = 1;
-    $db->{sqlite_see_if_its_a_number} = 1;
+   {my $db = DBIx::Simple->connect("dbi:SQLite:dbname=$p{database_path}", '', '',
+       {RaiseError => 1,
+        sqlite_unicode => 1,
+        sqlite_see_if_its_a_number => 1});
     $db->query('pragma foreign_keys = on');
 
     $db->begin;
